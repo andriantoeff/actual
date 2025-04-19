@@ -86,7 +86,15 @@ global.Actual = {
       });
   },
 
-  startOAuthServer: () => {},
+  startSyncServer: () => {},
+
+  stopSyncServer: () => {},
+
+  isSyncServerRunning: () => false,
+
+  startOAuthServer: () => {
+    return '';
+  },
 
   restartElectronServer: () => {},
 

@@ -22,6 +22,8 @@ import { Row } from '../table';
 import { RenderMonths } from './RenderMonths';
 import { SidebarCategory } from './SidebarCategory';
 
+import { useDragRef } from '@desktop-client/hooks/useDragRef';
+
 type ExpenseCategoryProps = {
   cat: CategoryEntity;
   categoryGroup?: CategoryGroupEntity;
@@ -65,6 +67,7 @@ export function ExpenseCategory({
     item: cat,
     canDrag: editingCell === null,
   });
+  const handleDragRef = useDragRef(dragRef);
 
   const { dropRef, dropPos } = useDroppable({
     types: 'category',
@@ -85,7 +88,7 @@ export function ExpenseCategory({
 
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <SidebarCategory
-          innerRef={dragRef}
+          innerRef={handleDragRef}
           category={cat}
           categoryGroup={categoryGroup}
           dragPreview={dragging && dragState.preview}

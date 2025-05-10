@@ -1,19 +1,20 @@
 // @ts-strict-ignore
 import React, {
   forwardRef,
-  useState,
   useCallback,
-  useRef,
-  useLayoutEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
+  useRef,
+  useState,
   type ComponentProps,
-  type ReactNode,
+  type JSX,
   type KeyboardEvent,
-  type UIEvent,
   type ReactElement,
+  type ReactNode,
   type Ref,
-  type MutableRefObject,
+  type RefObject,
+  type UIEvent,
 } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
@@ -29,13 +30,6 @@ import { Text } from '@actual-app/components/text';
 import { theme } from '@actual-app/components/theme';
 import { View } from '@actual-app/components/view';
 
-import { useModalState } from '../hooks/useModalState';
-import {
-  AvoidRefocusScrollProvider,
-  useProperFocus,
-} from '../hooks/useProperFocus';
-import { useSelectedItems } from '../hooks/useSelected';
-
 import { FixedSizeList } from './FixedSizeList';
 import {
   ConditionalPrivacyFilter,
@@ -49,6 +43,13 @@ import {
 } from './spreadsheet';
 import { type FormatType, useFormat } from './spreadsheet/useFormat';
 import { useSheetValue } from './spreadsheet/useSheetValue';
+
+import { useModalState } from '@desktop-client/hooks/useModalState';
+import {
+  AvoidRefocusScrollProvider,
+  useProperFocus,
+} from '@desktop-client/hooks/useProperFocus';
+import { useSelectedItems } from '@desktop-client/hooks/useSelected';
 
 export const ROW_HEIGHT = 32;
 
@@ -926,7 +927,7 @@ type TableProps<T extends TableItem = TableItem> = {
   loadMore?: () => void;
   style?: CSSProperties;
   navigator?: ReturnType<typeof useTableNavigator<T>>;
-  listContainerRef?: MutableRefObject<HTMLDivElement>;
+  listContainerRef?: RefObject<HTMLDivElement>;
   onScroll?: () => void;
   isSelected?: (id: T['id']) => boolean;
   saveScrollWidth?: (parent, child) => void;
@@ -1225,7 +1226,7 @@ export function useTableNavigator<T extends TableItem>(
   const getFields = typeof fields !== 'function' ? () => fields : fields;
   const [editingId, setEditingId] = useState<T['id']>(null);
   const [focusedField, setFocusedField] = useState<string>(null);
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // See `onBlur` for why we need this
   const modalState = useModalState();

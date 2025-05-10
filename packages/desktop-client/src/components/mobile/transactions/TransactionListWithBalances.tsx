@@ -11,7 +11,6 @@ import {
   type TransactionEntity,
 } from 'loot-core/types/models';
 
-import { SelectedProvider, useSelected } from '../../../hooks/useSelected';
 import { Search } from '../../common/Search';
 import type { Binding, SheetNames, SheetFields } from '../../spreadsheet';
 import { CellValue, CellValueText } from '../../spreadsheet/CellValue';
@@ -19,6 +18,11 @@ import { useSheetValue } from '../../spreadsheet/useSheetValue';
 import { PullToRefresh } from '../PullToRefresh';
 
 import { TransactionList } from './TransactionList';
+
+import {
+  SelectedProvider,
+  useSelected,
+} from '@desktop-client/hooks/useSelected';
 
 type TransactionSearchInputProps = {
   placeholder: string;
@@ -65,6 +69,7 @@ type TransactionListWithBalancesProps = {
   balance:
     | Binding<'account', 'onbudget-accounts-balance'>
     | Binding<'account', 'offbudget-accounts-balance'>
+    | Binding<'account', 'closed-accounts-balance'>
     | Binding<SheetNames, 'uncategorized-balance'>
     | Binding<'category', 'balance'>
     | Binding<'account', 'balance'>

@@ -21,8 +21,6 @@ import {
 } from 'loot-core/client/queries/queriesSlice';
 import { type AccountEntity } from 'loot-core/types/models';
 
-import { useContextMenu } from '../../hooks/useContextMenu';
-import { useNotes } from '../../hooks/useNotes';
 import { useDispatch } from '../../redux';
 import { Link } from '../common/Link';
 import { Notes } from '../Notes';
@@ -35,6 +33,10 @@ import {
 } from '../sort';
 import { type SheetFields, type Binding } from '../spreadsheet';
 import { CellValue } from '../spreadsheet/CellValue';
+
+import { useContextMenu } from '@desktop-client/hooks/useContextMenu';
+import { useDragRef } from '@desktop-client/hooks/useDragRef';
+import { useNotes } from '@desktop-client/hooks/useNotes';
 
 export const accountNameStyle: CSSProperties = {
   marginTop: -2,
@@ -98,6 +100,7 @@ export function Account<FieldName extends SheetFields<'account'>>({
     item: { id: account && account.id },
     canDrag: account != null,
   });
+  const handleDragRef = useDragRef(dragRef);
 
   const { dropRef, dropPos } = useDroppable({
     types: account ? [type] : [],
@@ -120,7 +123,7 @@ export function Account<FieldName extends SheetFields<'account'>>({
     >
       <View innerRef={triggerRef}>
         <DropHighlight pos={dropPos} />
-        <View innerRef={dragRef}>
+        <View innerRef={handleDragRef}>
           <Link
             variant="internal"
             to={to}

@@ -13,8 +13,6 @@ import {
   createGroup,
   deleteCategory,
   deleteGroup,
-  moveCategory,
-  moveCategoryGroup,
   updateCategory,
   updateGroup,
 } from 'loot-core/client/queries/queriesSlice';
@@ -22,16 +20,17 @@ import { useSpreadsheet } from 'loot-core/client/SpreadsheetProvider';
 import { send } from 'loot-core/platform/client/fetch';
 import * as monthUtils from 'loot-core/shared/months';
 
-import { useCategories } from '../../../hooks/useCategories';
-import { useLocale } from '../../../hooks/useLocale';
-import { useLocalPref } from '../../../hooks/useLocalPref';
-import { useSyncedPref } from '../../../hooks/useSyncedPref';
 import { useDispatch } from '../../../redux';
 import { prewarmMonth } from '../../budget/util';
 import { NamespaceContext } from '../../spreadsheet/NamespaceContext';
 import { SyncRefresh } from '../../SyncRefresh';
 
 import { BudgetTable } from './BudgetTable';
+
+import { useCategories } from '@desktop-client/hooks/useCategories';
+import { useLocale } from '@desktop-client/hooks/useLocale';
+import { useLocalPref } from '@desktop-client/hooks/useLocalPref';
+import { useSyncedPref } from '@desktop-client/hooks/useSyncedPref';
 
 function isBudgetType(input?: string): input is 'rollover' | 'report' {
   return ['rollover', 'report'].includes(input);
@@ -263,52 +262,6 @@ export function Budget() {
       dispatch(collapseModals({ rootModalName: 'category-menu' }));
     },
     [categories, dispatch, onSaveCategory],
-  );
-
-  const onReorderCategory = useCallback(
-    (id, { inGroup, aroundCategory }) => {
-      let groupId, targetId;
-
-      if (inGroup) {
-        groupId = inGroup;
-      } else if (aroundCategory) {
-        const { id: originalCatId, position } = aroundCategory;
-
-        let catId = originalCatId;
-        const group = categoryGroups.find(group =>
-          group.categories?.find(cat => cat.id === catId),
-        );
-
-        if (position === 'bottom') {
-          const idx =
-            group?.categories?.findIndex(cat => cat.id === catId) ?? -1;
-          catId = group?.categories
-            ? idx < group.categories.length - 1
-              ? group.categories[idx + 1].id
-              : null
-            : null;
-        }
-
-        groupId = group?.id;
-        targetId = catId;
-      }
-
-      dispatch(moveCategory({ id, groupId, targetId }));
-    },
-    [categoryGroups, dispatch],
-  );
-
-  const onReorderGroup = useCallback(
-    (id, targetId, position) => {
-      if (position === 'bottom') {
-        const idx = categoryGroups.findIndex(group => group.id === targetId);
-        targetId =
-          idx < categoryGroups.length - 1 ? categoryGroups[idx + 1].id : null;
-      }
-
-      dispatch(moveCategoryGroup({ id, targetId }));
-    },
-    [categoryGroups, dispatch],
   );
 
   const onPrevMonth = useCallback(async () => {
@@ -568,24 +521,15 @@ export function Budget() {
             // format changes
             key={`${numberFormat}${hideFraction}`}
             categoryGroups={categoryGroups}
-            type={budgetType}
             month={startMonth}
             monthBounds={bounds}
-            // editMode={editMode}
             onShowBudgetSummary={onShowBudgetSummary}
             onPrevMonth={onPrevMonth}
             onNextMonth={onNextMonth}
             onCurrentMonth={onCurrentMonth}
-            onSaveGroup={onSaveGroup}
-            onDeleteGroup={onDeleteGroup}
-            onAddCategory={onOpenNewCategoryModal}
-            onSaveCategory={onSaveCategory}
-            onDeleteCategory={onDeleteCategory}
-            onReorderCategory={onReorderCategory}
-            onReorderGroup={onReorderGroup}
             onBudgetAction={onBudgetAction}
             onRefresh={onRefresh}
-            onEditGroup={onOpenCategoryGroupMenuModal}
+            onEditCategoryGroup={onOpenCategoryGroupMenuModal}
             onEditCategory={onOpenCategoryMenuModal}
             onOpenBudgetPageMenu={onOpenBudgetPageMenu}
             onOpenBudgetMonthMenu={onOpenBudgetMonthMenu}

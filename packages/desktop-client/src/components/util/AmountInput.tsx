@@ -19,9 +19,10 @@ import { View } from '@actual-app/components/view';
 import { evalArithmetic } from 'loot-core/shared/arithmetic';
 import { amountToInteger, appendDecimals } from 'loot-core/shared/util';
 
-import { useMergedRefs } from '../../hooks/useMergedRefs';
-import { useSyncedPref } from '../../hooks/useSyncedPref';
 import { useFormat } from '../spreadsheet/useFormat';
+
+import { useMergedRefs } from '@desktop-client/hooks/useMergedRefs';
+import { useSyncedPref } from '@desktop-client/hooks/useSyncedPref';
 
 type AmountInputProps = {
   id?: string;
@@ -67,7 +68,7 @@ export function AmountInput({
   const [value, setValue] = useState(initialValueAbsolute);
   useEffect(() => setValue(initialValueAbsolute), [initialValueAbsolute]);
 
-  const buttonRef = useRef();
+  const buttonRef = useRef(null);
   const ref = useRef<HTMLInputElement>(null);
   const mergedRef = useMergedRefs<HTMLInputElement>(inputRef, ref);
   const [hideFraction] = useSyncedPref('hideFraction');

@@ -17,6 +17,8 @@ import { Row, ROW_HEIGHT } from '../table';
 import { RenderMonths } from './RenderMonths';
 import { SidebarGroup } from './SidebarGroup';
 
+import { useDragRef } from '@desktop-client/hooks/useDragRef';
+
 type ExpenseGroupProps = {
   group: ComponentProps<typeof SidebarGroup>['group'];
   collapsed: boolean;
@@ -62,6 +64,7 @@ export function ExpenseGroup({
     item: group,
     canDrag: editingCell === null,
   });
+  const handleDragRef = useDragRef(dragRef);
 
   const { dropRef, dropPos } = useDroppable({
     types: 'group',
@@ -117,7 +120,7 @@ export function ExpenseGroup({
         }}
       >
         <SidebarGroup
-          innerRef={dragRef}
+          innerRef={handleDragRef}
           group={group}
           editing={
             editingCell &&

@@ -15,6 +15,8 @@ import { Row } from '../table';
 import { RenderMonths } from './RenderMonths';
 import { SidebarCategory } from './SidebarCategory';
 
+import { useDragRef } from '@desktop-client/hooks/useDragRef';
+
 type IncomeCategoryProps = {
   cat: CategoryEntity;
   isLast?: boolean;
@@ -50,6 +52,7 @@ export function IncomeCategory({
     item: cat,
     canDrag: editingCell === null,
   });
+  const handleDragRef = useDragRef(dragRef);
 
   const { dropRef, dropPos } = useDroppable({
     types: 'income-category',
@@ -68,7 +71,7 @@ export function IncomeCategory({
       <DropHighlight pos={dropPos} offset={{ top: 1 }} />
 
       <SidebarCategory
-        innerRef={dragRef}
+        innerRef={handleDragRef}
         category={cat}
         isLast={isLast}
         editing={
